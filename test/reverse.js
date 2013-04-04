@@ -40,28 +40,12 @@ require('tape')('reverse', function (t) {
 
     t.notOk(err)
     var i = 0
-/*
-    db.createReadStream({reverse: true})
-      .on('data', console.log)
-      .on('end', function () {
-        console.log('END')
-      })
-//*/
-/**/
     l.read(db, {reverse: true})
     .pipe(pull.collect(function (err, ary) {
       t.notOk(err)
       t.equal(ary.length, all.length)
       t.deepEqual(ary, all.reverse())
-//      t.deepEqual(ary, h.sort(ary.slice()))
       t.end()
     }))
-//*/
-    /*
-    h.timestamps(db, 10, function (err, _all) {
-      second = true
-      all = all.concat(_all)
-    })
-    */
   })
 })
