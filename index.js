@@ -55,6 +55,5 @@ exports.createWriteStream = function (db, opts, done) {
     db.batch(batch, cb)
   }))
   .pipe(pull.onEnd(done))
-
 }
 
