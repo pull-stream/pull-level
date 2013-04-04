@@ -45,16 +45,17 @@ exports.words = function (db, cb) {
 }
 
 
+var ts = 0
 exports.timestamps = function (db, n, cb) {
   var all = []
   pull.infinite()
+  .pipe(pull.take(n))
   .pipe(pull.map(function (e) {
     return {
       key   : timestamp().toString(),
       value : e.toString()
     }
   }))
-  .pipe(pull.take(n))
   .pipe(pull.through(function (e) {
     all.push({key:e.key, value: e.value})
   }))

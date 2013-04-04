@@ -21,29 +21,41 @@ require('tape')('live', function (t) {
     var i = 0
 
     l.read(db, {tail: true})
-    .pipe(pull.take(20))
-    .pipe(pull.asyncMap(function (e, cb) {
-      setTimeout(function () {
-        cb(null, e)
-      }, 5)
-    }))
+    .pipe(function (read) {
+      return function (abort, cb) {
+        read(abort, function (end, data) {
+          cb(end, data)
+        })
+      }
+    })
     .pipe(pull.through(function (e) {
-        console.log(e, i++)
-      }))
+      console.log('>>>', e, ++i)
+    }, function () {
+      console.log("END")
+    }))
+    .pipe(pull.take(20, true))
     .pipe(pull.collect(function (err, ary) {
-      t.notOk(err)
-      t.ok(second)
-      t.equal(ary.length, all.length)
-      t.equal(ary.length, 20)
-      t.deepEqual(ary, all)
-      t.deepEqual(ary, h.sort(ary.slice()))
-      t.end()
+      process.nextTick(function () {
+        t.notOk(err)
+        t.ok(second)
+        console.log(all)
+        t.equal(ary.length, 20)
+        t.equal(ary.length, all.length)
+        t.deepEqual(ary, h.sort(ary.slice()))
+        t.deepEqual(ary.map(function (e) {
+          return {key: e.key, value: e.value}
+        }), all)
+        t.end()
+      })
     }))
 
-    h.timestamps(db, 10, function (err, _all) {
-      second = true
-      all = all.concat(_all)
-    })
-     
+
+    setTimeout(function () {
+      h.timestamps(db, 10, function (err, _all) {
+        second = true
+        all = all.concat(_all)
+        console.log('all', all, all.length)
+      })
+    }, 100)
   })
 })
