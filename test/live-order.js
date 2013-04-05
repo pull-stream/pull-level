@@ -28,11 +28,6 @@ require('tape')('live', function (t) {
         })
       }
     })
-    .pipe(pull.through(function (e) {
-      console.log('>>>', e, ++i)
-    }, function () {
-      console.log("END")
-    }))
     .pipe(pull.take(20, true))
     .pipe(pull.collect(function (err, ary) {
       process.nextTick(function () {
