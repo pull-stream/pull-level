@@ -8,11 +8,16 @@
     "url": "git://github.com/dominictarr/pull-level.git"
   },
   "dependencies": {
-    "level-fix-range": "~1.1"
+    "level-fix-range": "~1.1",
+    "pull-stream": "~2.10",
+    "pull-pushable": "~1.0.2",
+    "pull-window": "~1.0.1",
+    "pull-cat": "~1.0"
   },
   "devDependencies": {
     "monotonic-timestamp": "0.0.8",
-    "levelup": "git://github.com/dominictarr/node-levelup.git#installable-reverse"
+    "levelup": "git://github.com/dominictarr/node-levelup.git#installable-reverse",
+    "level-sublevel": "~4.1.0"
   },
   "scripts": {
     "test": "set -e; for t in test/*.js; do node $t; done"
