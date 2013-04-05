@@ -12,12 +12,14 @@
     "pull-stream": "~2.10",
     "pull-pushable": "~1.0.2",
     "pull-window": "~1.0.1",
-    "pull-cat": "~1.0"
+    "pull-cat": "~1.0",
+    "stream-to-pull-stream": "~1.1.2"
   },
   "devDependencies": {
     "monotonic-timestamp": "0.0.8",
     "levelup": "git://github.com/dominictarr/node-levelup.git#installable-reverse",
-    "level-sublevel": "~4.1.0"
+    "level-sublevel": "~4.1.0",
+    "rimraf": "~2.1.4"
   },
   "scripts": {
     "test": "set -e; for t in test/*.js; do node $t; done"
