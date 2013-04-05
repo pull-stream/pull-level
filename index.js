@@ -33,7 +33,7 @@ exports.createReadStream = function (db, opts) {
   fixRange(opts)
   if(!opts.tail)
     return read(db, opts)
-  return cat([read(db, opts), live(db, opts) ])
+  return cat([read(db, opts), live(db, opts)])
 }
 
 exports.write =
