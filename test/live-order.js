@@ -19,8 +19,11 @@ require('tape')('live', function (t) {
   h.timestamps(db, 10, function (err, all) {
 
     var i = 0
-
-    l.read(db, {tail: true})
+    var sync = false
+    l.read(db, {tail: true, onSync: function () {
+      console.log('SYNC')
+      sync = true
+    }})
     .pipe(function (read) {
       return function (abort, cb) {
         read(abort, function (end, data) {
@@ -40,6 +43,7 @@ require('tape')('live', function (t) {
         t.deepEqual(ary.map(function (e) {
           return {key: e.key, value: e.value}
         }), all)
+        t.ok(sync)
         t.end()
       })
     }))

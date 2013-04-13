@@ -14,11 +14,14 @@ var h = require('./helper')
 
 require('tape')('live', function (t) {
 
-  var second = false
+  var second = false, sync
 
   h.random(db, 10, function (err, all) {
 
-    l.read(db, {tail: true})
+    l.read(db, {tail: true, onSync: function () {
+      console.log('sync')
+      sync = true
+    }})
     .pipe(pull.take(20))
     .pipe(pull.collect(function (err, ary) {
       t.notOk(err)
@@ -26,6 +29,7 @@ require('tape')('live', function (t) {
       console.log(ary)
       t.equal(ary.length, all.length)
       t.deepEqual(h.sort(ary), all)
+      t.ok(sync)
       t.end()
     }))
 
