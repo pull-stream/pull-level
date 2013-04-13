@@ -12,7 +12,7 @@
     "pull-stream": "~2.10",
     "pull-pushable": "~1.0.2",
     "pull-window": "~1.0.1",
-    "pull-cat": "~1.0",
+    "pull-cat": "~1.1",
     "stream-to-pull-stream": "~1.1.2"
   },
   "devDependencies": {
