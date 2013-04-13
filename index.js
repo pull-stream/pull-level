@@ -33,7 +33,13 @@ exports.createReadStream = function (db, opts) {
   fixRange(opts)
   if(!opts.tail)
     return read(db, opts)
-  return cat([read(db, opts), live(db, opts)])
+
+  //optionally notify when we switch from reading history to realtime
+  var sync = opts.onSync && function (abort, cb) {
+      opts.onSync(); cb(true)
+    }
+
+  return cat([read(db, opts), sync, live(db, opts)])
 }
 
 exports.write =
