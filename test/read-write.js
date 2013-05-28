@@ -1,5 +1,5 @@
 
-var levelup = require('levelup')
+var levelup = require('level')
 var pull    = require('pull-stream')
 
 var path    = '/tmp/pull-level-read-stream'
@@ -12,6 +12,8 @@ require('tape')('read-stream', function (t) {
 
   pull.infinite()
   .pipe(pull.map(function (e) {
+
+//    throw new Error('wtf')
     return {
       key: e.toString(),
       value: new Date().toString()

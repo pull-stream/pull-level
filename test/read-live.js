@@ -1,5 +1,5 @@
 
-var levelup  = require('levelup')
+var levelup  = require('level')
 var SubLevel = require('level-sublevel')
 var pull     = require('pull-stream')
 
