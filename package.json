@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "level-fix-range": "~1.1",
-    "pull-stream": "~2.10",
+    "pull-stream": "~2.18",
     "pull-pushable": "~1.0.2",
     "pull-window": "~1.0.1",
     "pull-cat": "~1.1",
