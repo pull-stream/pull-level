@@ -24,14 +24,7 @@ require('tape')('live', function (t) {
       console.log('SYNC')
       sync = true
     }})
-    .pipe(function (read) {
-      return function (abort, cb) {
-        read(abort, function (end, data) {
-          cb(end, data)
-        })
-      }
-    })
-    .pipe(pull.take(20, true))
+    .pipe(h.exactly(20))
     .pipe(pull.collect(function (err, ary) {
       process.nextTick(function () {
         t.notOk(err)

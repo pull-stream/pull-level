@@ -64,3 +64,13 @@ exports.timestamps = function (db, n, cb) {
   }))
 
 }
+
+exports.exactly = function (n) {
+  return function (read) {
+    return function (abort, cb) {
+      if(0 <=--n) read(abort, cb)
+      else cb(true)
+    }
+  }
+}
+

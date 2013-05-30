@@ -22,15 +22,7 @@ require('tape')('live', function (t) {
       console.log('sync')
       sync = true
     }})
-    .pipe(function (read) { //it's like pull.take(), but check BEFORE reading
-      var n = 20
-      return function (a, cb) {
-        if(n--)
-          read(a, cb)
-        else
-          cb(true)
-      }
-    })
+    .pipe(h.exactly(20))
     .pipe(pull.map(function (e) {
       return {key: e.key, value: e.value}//drop 'type' from live updates
     }))

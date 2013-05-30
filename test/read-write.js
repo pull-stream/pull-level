@@ -12,8 +12,6 @@ require('tape')('read-stream', function (t) {
 
   pull.infinite()
   .pipe(pull.map(function (e) {
-
-//    throw new Error('wtf')
     return {
       key: e.toString(),
       value: new Date().toString()
