@@ -9,10 +9,10 @@
   },
   "dependencies": {
     "level-fix-range": "~1.1",
-    "pull-stream": "~2.18",
-    "pull-pushable": "~1.0.2",
-    "pull-window": "~1.0.1",
-    "pull-cat": "~1.1",
+    "pull-stream": ">=2.18 <3",
+    "pull-pushable": "1",
+    "pull-window": "1",
+    "pull-cat": ">=1.1 <2",
     "stream-to-pull-stream": "1.2"
   },
   "devDependencies": {
