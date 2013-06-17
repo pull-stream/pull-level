@@ -1,11 +1,10 @@
-
-
 var pull     = require('pull-stream')
 var toPull   = require('stream-to-pull-stream')
 var pushable = require('pull-pushable')
 var cat      = require('pull-cat')
 var window   = require('pull-window')
 var fixRange = require('level-fix-range')
+var post     = require('level-post')
 
 function read(db, opts) {
   return toPull(db.createReadStream(fixRange(opts)))
@@ -18,7 +17,8 @@ function (db, opts) {
   fixRange(opts)
 
   var l = pushable()
-  var cleanup = db.post(opts, function (ch) {
+
+  var cleanup = post(db, opts, function (ch) {
     l.push(ch)
   })
 
