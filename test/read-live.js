@@ -1,11 +1,11 @@
 
 var levelup  = require('level')
-var SubLevel = require('level-sublevel')
+//var SubLevel = require('level-sublevel')
 var pull     = require('pull-stream')
 
 var path    = '/tmp/pull-level-read-live'
 require('rimraf').sync(path)
-var db      = SubLevel(levelup(path))
+var db      = levelup(path)
 
 var l = require('../')
 var all = []
