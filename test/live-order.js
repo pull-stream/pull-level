@@ -20,26 +20,28 @@ require('tape')('live', function (t) {
 
     var i = 0
     var sync = false
-    l.read(db, {tail: true, onSync: function () {
-      console.log('SYNC')
-      sync = true
-    }})
-    .pipe(h.exactly(20))
-    .pipe(pull.collect(function (err, ary) {
-      process.nextTick(function () {
-        t.notOk(err)
-        t.ok(second)
-        console.log(all)
-        t.equal(ary.length, 20)
-        t.equal(ary.length, all.length)
-        t.deepEqual(ary, h.sort(ary.slice()))
-        t.deepEqual(ary.map(function (e) {
-          return {key: e.key, value: e.value}
-        }), all)
-        t.ok(sync)
-        t.end()
+    pull(
+      l.read(db, {tail: true, onSync: function () {
+        console.log('SYNC')
+        sync = true
+      }}),
+      h.exactly(20),
+      pull.collect(function (err, ary) {
+        process.nextTick(function () {
+          t.notOk(err)
+          t.ok(second)
+          console.log(all)
+          t.equal(ary.length, 20)
+          t.equal(ary.length, all.length)
+          t.deepEqual(ary, h.sort(ary.slice()))
+          t.deepEqual(ary.map(function (e) {
+            return {key: e.key, value: e.value}
+          }), all)
+          t.ok(sync)
+          t.end()
+        })
       })
-    }))
+    )
 
 
     setTimeout(function () {
