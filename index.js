@@ -19,7 +19,6 @@ function (db, opts) {
   var l = pushable()
 
   var cleanup = post(db, opts, function (ch) {
-    console.log('post!', ch)
     l.push(ch)
   })
 
@@ -60,7 +59,6 @@ exports.createWriteStream = function (db, opts, done) {
     }),
     pw.recent(opts.windowSize, opts.windowTime),
     pull.asyncMap(function (batch, cb) {
-      console.log('write batch', batch)
       db.batch(batch, cb)
     }),
     pull.drain(null, done)
