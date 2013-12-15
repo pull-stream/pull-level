@@ -7,7 +7,7 @@ var fixRange = require('level-fix-range')
 var post     = require('level-post')
 
 function read(db, opts) {
-  return toPull(db.createReadStream(fixRange(opts)))
+  return toPull.read1(db.createReadStream(fixRange(opts)))
 }
 
 var live = 
