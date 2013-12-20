@@ -14,7 +14,7 @@
     "pull-pushable": "1",
     "pull-window": ">=2.1.2 <3",
     "pull-cat": ">=1.1 <2",
-    "stream-to-pull-stream": "1.2",
+    "stream-to-pull-stream": "1.3",
     "level-post": "~1.0.3"
   },
   "devDependencies": {
