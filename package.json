@@ -1,4 +1,3 @@
-
 {
   "name": "pull-level",
   "description": "pull-stream interface to levelup",
@@ -9,7 +8,6 @@
     "url": "git://github.com/dominictarr/pull-level.git"
   },
   "dependencies": {
-    "level-fix-range": "~1.1",
     "pull-stream": ">=2.20 <3",
     "pull-pushable": "1",
     "pull-window": ">=2.1.2 <3",
@@ -21,7 +19,8 @@
     "monotonic-timestamp": "0.0.8",
     "level-sublevel": "~4.1.0",
     "rimraf": "~2.1.4",
-    "level": "~0.10.0"
+    "level": "~0.10.0",
+    "tape": "~2.13.3"
   },
   "scripts": {
     "test": "set -e; for t in test/*.js; do node $t; done"

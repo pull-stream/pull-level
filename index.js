@@ -3,18 +3,16 @@ var toPull   = require('stream-to-pull-stream')
 var pushable = require('pull-pushable')
 var cat      = require('pull-cat')
 var pw       = require('pull-window')
-var fixRange = require('level-fix-range')
 var post     = require('level-post')
 
 function read(db, opts) {
-  return toPull.read1(db.createReadStream(fixRange(opts)))
+  return toPull.read1(db.createReadStream(opts))
 }
 
-var live = 
-exports.live = 
+var live =
+exports.live =
 function (db, opts) {
   opts = opts || {}
-  fixRange(opts)
 
   var l = pushable()
 
@@ -27,10 +25,9 @@ function (db, opts) {
 }
 
 exports.read =
-exports.readStream = 
+exports.readStream =
 exports.createReadStream = function (db, opts) {
   opts = opts || {}
-  fixRange(opts)
   if(!opts.tail)
     return read(db, opts)
 
@@ -43,7 +40,7 @@ exports.createReadStream = function (db, opts) {
 }
 
 exports.write =
-exports.writeStream = 
+exports.writeStream =
 exports.createWriteStream = function (db, opts, done) {
   if('function' === typeof opts)
     done = opts, opts = null
