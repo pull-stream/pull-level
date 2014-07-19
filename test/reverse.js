@@ -17,18 +17,20 @@ function filter(range) {
   require('tape')('ranges:' + JSON.stringify(range), 
   function (t) {
 
-    l.read(db, {reverse: true})
-    .pipe(pull.collect(function (err, ary) {
-      t.notOk(err)
-      t.equal(ary.length, all.length)
-      t.deepEqual(h.sort(ary), all.filter(function (e) {
-        return (
-          (!range.min || range.min <= e.key) && 
-          (!range.max || range.max >= e.key)
-        )
-      }))
-      t.end()
-    }))
+    pull(
+      l.read(db, {reverse: true}),
+      pull.collect(function (err, ary) {
+        t.notOk(err)
+        t.equal(ary.length, all.length)
+        t.deepEqual(h.sort(ary), all.filter(function (e) {
+          return (
+            (!range.min || range.min <= e.key) && 
+            (!range.max || range.max >= e.key)
+          )
+        }))
+        t.end()
+      })
+    )
   })
 }
 
@@ -40,13 +42,15 @@ require('tape')('reverse', function (t) {
 
     t.notOk(err)
     var i = 0
-    l.read(db, {reverse: true})
-    .pipe(pull.collect(function (err, ary) {
-      t.notOk(err)
-      t.equal(ary.length, all.length)
-      t.deepEqual(ary, all.reverse())
-      t.end()
-    }))
+    pull(
+      l.read(db, {reverse: true}),
+      pull.collect(function (err, ary) {
+        t.notOk(err)
+        t.equal(ary.length, all.length)
+        t.deepEqual(ary, all.reverse())
+        t.end()
+      })
+    )
   })
 })
 
