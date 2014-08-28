@@ -17,7 +17,12 @@ function (db, opts) {
   var l = pushable()
 
   var cleanup = post(db, opts, function (ch) {
-    l.push(ch)
+    if(opts.keys === false)
+      l.push(ch.value)
+    else if(opts.values === false)
+      l.push(ch.key)
+    else
+      l.push(ch)
   })
 
   return pull(l, pull.through(null, cleanup))
