@@ -19,7 +19,7 @@ require('tape')('live', function (t) {
   h.random(db, 10, function (err, all) {
 
     pull(
-      l.read(db, {tail: true, onSync: function () {
+      l.read(db, {live: true, onSync: function () {
         console.log('sync')
         sync = true
       }}),

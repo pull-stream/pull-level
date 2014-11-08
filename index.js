@@ -33,7 +33,7 @@ exports.read =
 exports.readStream =
 exports.createReadStream = function (db, opts) {
   opts = opts || {}
-  if(!opts.tail)
+  if(!(opts.tail || opts.live))
     return read(db, opts)
 
   //optionally notify when we switch from reading history to realtime

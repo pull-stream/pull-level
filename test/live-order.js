@@ -23,7 +23,7 @@ tape('live', function (t) {
     var i = 0
     var sync = false
     pull(
-      l.read(db, {tail: true, onSync: function () {
+      l.read(db, {live: true, onSync: function () {
         console.log('SYNC')
         sync = true
       }}),
