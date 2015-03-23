@@ -41,6 +41,9 @@ exports.createReadStream = function (db, opts) {
       opts.onSync(abort); cb(abort || true)
     }
 
+  if(opts.onSync === true || opts.sync === true)
+    sync = pull.values([{sync: true}])
+
   return cat([read(db, opts), sync, live(db, opts)])
 }
 
