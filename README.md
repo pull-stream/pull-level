@@ -104,6 +104,44 @@ pull(
 )
 ```
 
+## Example realtime aggregation
+
+We want to keep a realtime count of everything in the database.
+When ever something is inserted, we increment. But, we need
+to check the records that are *currently* in the database.
+
+Since it takes some time to scan the database, we need to make sure
+we have done that before giving an answer. We can read it all with
+one stream, using `{sync: true}` to be notified of when we have read out all the old records.
+
+First all the old records are read from the non-live stream,
+then you get one `{sync: true}` element, then all the new item.
+
+``` js
+var sum = 0, ready = false, waiting = []
+
+//call get count to know s
+function getSum (cb) {
+  if(!ready) waiting.push(cb)
+  else cb(null, sum)
+}
+
+pull(
+  pl.read(db, {sync: true}),
+  pull.drain(function (op) {
+    if(op.sync) {
+      //if we see a data element with this it means
+      ready = true
+      while(waiting.length) waiting.shift()(null, count)
+    }
+    //increment our counter!
+    if(Number.isFinite(+op.value.amount)) //filter out non numbers & NaN.
+      sum += op.value.amount
+  })
+)
+
+```
+
 ## License
 
 MIT
