@@ -103,3 +103,50 @@ tape('live2', function (t) {
   })
 })
 
+
+tape('live, sync:true', function (t) {
+  var path    = '/tmp/pull-level-read-live3'
+  require('rimraf').sync(path)
+  var db      = levelup(path)
+
+  var second = false
+
+  h.timestamps(db, 10, function (err, all) {
+
+    var i = 0
+    var sync = false
+    pull(
+      l.read(db, {tail: true, keys: false, sync: true}),
+      pull.filter(function (data) {
+        if(data.sync) sync = true
+        else return true
+      }),
+      h.exactly(20),
+      pull.collect(function (err, ary) {
+        process.nextTick(function () {
+          t.notOk(err)
+          t.ok(second)
+          console.log(ary)
+          t.equal(ary.length, 20)
+          t.equal(ary.length, all.length)
+
+          var values = all.map(function (e) { return e.value })
+
+          t.deepEqual(ary, values)
+          t.ok(sync)
+          t.end()
+        })
+      })
+    )
+
+
+    setTimeout(function () {
+      h.timestamps(db, 10, function (err, _all) {
+        second = true
+        all = all.concat(_all)
+//        console.log('all', all, all.length)
+      })
+    }, 100)
+  })
+
+})
