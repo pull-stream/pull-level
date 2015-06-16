@@ -14,7 +14,10 @@ exports.live =
 function (db, opts) {
   opts = opts || {}
 
-  var l = pushable()
+  var l = pushable(function (err) {
+    if(opts.onAbort) opts.onAbort(err)
+    cleanup()
+  })
 
   var cleanup = post(db, opts, function (ch) {
     if(opts.keys === false)
@@ -25,7 +28,7 @@ function (db, opts) {
       l.push(ch)
   })
 
-  return pull(l, pull.through(null, cleanup))
+  return l
 
 }
 
