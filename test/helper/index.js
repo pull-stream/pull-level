@@ -52,6 +52,7 @@ exports.words = function (db, cb) {
 var ts = 0
 exports.timestamps = function (db, n, cb) {
   var all = []
+  ended = false
   pull(
     pull.infinite(),
     pull.take(n),
@@ -65,17 +66,22 @@ exports.timestamps = function (db, n, cb) {
       all.push({key:e.key, value: e.value})
     }),
     l.write(db, function (err) {
-     cb(err, all)
+      if(ended) throw new Error('ended twice')
+      ended = true
+      cb(err, all)
     })
   )
 
 }
 
-exports.exactly = function (n) {
+exports.exactly = function (n, err) {
   return function (read) {
     return function (abort, cb) {
       if(0 <=--n) read(abort, cb)
-      else cb(true)
+      else console.log(abort, err, true), read(abort || err || true, function (end, data) {
+        console.log('ABORTED', end, data)
+        cb(end, data)
+      })
     }
   }
 }

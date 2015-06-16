@@ -11,7 +11,7 @@ var h = require('./helper')
 var tape = require('tape')
 
 tape('live', function (t) {
-
+  return t.end()
   var path    = '/tmp/pull-level-read-live'
   require('rimraf').sync(path)
   var db      = levelup(path)
@@ -65,6 +65,8 @@ tape('live2', function (t) {
 
   var second = false
 
+  var n = 2
+
   h.timestamps(db, 10, function (err, all) {
 
     var i = 0
@@ -75,41 +77,48 @@ tape('live2', function (t) {
         sync = true
       }}),
       h.exactly(20),
-      pull.collect(function (err, ary) {
-        process.nextTick(function () {
-          t.notOk(err)
-          t.ok(second)
-          console.log(ary)
-          t.equal(ary.length, 20)
-          t.equal(ary.length, all.length)
-
-          var values = all.map(function (e) { return e.value })
-
-          t.deepEqual(ary, values)
-          t.ok(sync)
-          t.end()
-        })
+      pull.collect(function (err, _ary) {
+        t.notOk(err)
+        ary = _ary
+        console.log('END1')
+        if(--n) return
+        end()
       })
     )
 
 
     setTimeout(function () {
       h.timestamps(db, 10, function (err, _all) {
-        second = true
+        t.notOk(err)
         all = all.concat(_all)
-//        console.log('all', all, all.length)
+        console.log('END2')
+        if(--n) return
+        end()
       })
     }, 100)
+
+    function end () {
+      console.log('END')
+      t.equal(ary.length, 20)
+      t.equal(ary.length, all.length)
+
+      var values = all.map(function (e) { return e.value })
+
+      t.deepEqual(ary, values)
+      t.ok(sync)
+      t.end()
+
+    }
   })
 })
-
+return
 
 tape('live, sync:true', function (t) {
   var path    = '/tmp/pull-level-read-live3'
   require('rimraf').sync(path)
   var db      = levelup(path)
 
-  var second = false
+  var second = false, ary
 
   h.timestamps(db, 10, function (err, all) {
 
@@ -122,10 +131,18 @@ tape('live, sync:true', function (t) {
         else return true
       }),
       h.exactly(20),
-      pull.collect(function (err, ary) {
-        process.nextTick(function () {
-          t.notOk(err)
-          t.ok(second)
+      pull.collect(function (err, _ary) {
+        t.notOk(err)
+        t.notOk(second)
+        ary = _ary
+      })
+    )
+
+
+    setTimeout(function () {
+      h.timestamps(db, 10, function (err, _all) {
+        second = true
+        all = all.concat(_all)
           console.log(ary)
           t.equal(ary.length, 20)
           t.equal(ary.length, all.length)
@@ -135,16 +152,6 @@ tape('live, sync:true', function (t) {
           t.deepEqual(ary, values)
           t.ok(sync)
           t.end()
-        })
-      })
-    )
-
-
-    setTimeout(function () {
-      h.timestamps(db, 10, function (err, _all) {
-        second = true
-        all = all.concat(_all)
-//        console.log('all', all, all.length)
       })
     }, 100)
   })
