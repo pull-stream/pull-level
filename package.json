@@ -10,17 +10,17 @@
   "dependencies": {
     "level-post": "~1.0.3",
     "pull-cat": "^1.1.9",
-    "pull-pushable": "1",
+    "pull-pushable": "^1.1.4",
     "pull-stream": "^3.2.3",
     "pull-window": ">=2.1.2 <3",
     "stream-to-pull-stream": "^1.6.6"
   },
   "devDependencies": {
+    "level": "^1.4.0",
+    "level-sublevel": "^6.5.4",
     "monotonic-timestamp": "0.0.8",
-    "level-sublevel": "~4.1.0",
     "rimraf": "~2.1.4",
-    "level": "~0.10.0",
-    "tape": "~2.13.3"
+    "tape": "^4.5.1"
   },
   "scripts": {
     "test": "set -e; for t in test/*.js; do node $t; done"
