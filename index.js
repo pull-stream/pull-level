@@ -65,7 +65,7 @@ exports.createWriteStream = function (db, opts, done) {
         type  : e.value == null ? 'del' : 'put'
       }
     }),
-    pw.recent(opts.windowSize, opts.windowTime),
+    pw.recent(opts.windowSize, opts.windowTime || 100),
     pull.asyncMap(function (batch, cb) {
       db.batch(batch, cb)
     }),
