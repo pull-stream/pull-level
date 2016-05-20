@@ -32,6 +32,8 @@ function (db, opts) {
 
 }
 
+exports.old = read
+
 exports.read =
 exports.readStream =
 exports.createReadStream = function (db, opts) {
@@ -72,4 +74,5 @@ exports.createWriteStream = function (db, opts, done) {
     pull.drain(null, done)
   )
 }
+
 
