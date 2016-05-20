@@ -11,7 +11,7 @@
     "level-post": "~1.0.3",
     "pull-cat": "^1.1.9",
     "pull-pushable": "^1.1.4",
-    "pull-stream": "^3.2.3",
+    "pull-stream": "^3.4.0",
     "pull-window": ">=2.1.2 <3",
     "stream-to-pull-stream": "^1.6.6"
   },
