@@ -1,4 +1,8 @@
-var pull     = require('pull-stream')
+var pull     = require('pull-stream/pull')
+var Map      = require('pull-stream/throughs/map')
+var AsyncMap = require('pull-stream/throughs/async-map')
+var Drain    = require('pull-stream/sinks/drain')
+
 var toPull   = require('stream-to-pull-stream')
 var pushable = require('pull-pushable')
 var cat      = require('pull-cat')
@@ -59,7 +63,7 @@ exports.createWriteStream = function (db, opts, done) {
     done = opts, opts = null
   opts = opts || {}
   return pull(
-    pull.map(function (e) {
+    Map(function (e) {
       if(e.type) return e
       return {
         key   : e.key, 
@@ -68,11 +72,12 @@ exports.createWriteStream = function (db, opts, done) {
       }
     }),
     pw.recent(opts.windowSize, opts.windowTime),
-    pull.asyncMap(function (batch, cb) {
+    AsyncMap(function (batch, cb) {
       db.batch(batch, cb)
     }),
-    pull.drain(null, done)
+    Drain(null, done)
   )
 }
+
 
 
