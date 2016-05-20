@@ -1,7 +1,7 @@
 {
   "name": "pull-level",
   "description": "pull-stream interface to levelup",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "homepage": "https://github.com/dominictarr/pull-level",
   "repository": {
     "type": "git",
