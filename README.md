@@ -20,7 +20,7 @@ read items in database, plus realtime changes
 
 ``` js
 pull(
-  pl.read(db, {tail: true}),
+  pl.read(db, {live: true}),
   //log data as it comes,
   //because tail will keep the connection open
   //so we'll never see the end otherwise.
@@ -37,7 +37,7 @@ use `live`
 
 ``` js
 pull(
-  pl.live(db, {tail: true}),
+  pl.live(db, {live: true}),
   pull.through(console.log),
   pull.drain()
 )
