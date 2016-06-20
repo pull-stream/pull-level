@@ -10,6 +10,7 @@
   "dependencies": {
     "level-post": "~1.0.3",
     "pull-cat": "^1.1.9",
+    "pull-live": "^1.0.1",
     "pull-pushable": "^2.0.0",
     "pull-stream": "^3.4.0",
     "pull-window": "^2.1.4",

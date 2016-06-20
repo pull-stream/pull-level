@@ -2,6 +2,7 @@ var pull     = require('pull-stream/pull')
 var Map      = require('pull-stream/throughs/map')
 var AsyncMap = require('pull-stream/throughs/async-map')
 var Drain    = require('pull-stream/sinks/drain')
+var Live     = require('pull-live')
 
 var toPull   = require('stream-to-pull-stream')
 var pushable = require('pull-pushable')
@@ -41,19 +42,11 @@ exports.old = read
 exports.read =
 exports.readStream =
 exports.createReadStream = function (db, opts) {
-  opts = opts || {}
-  if(!(opts.tail || opts.live))
+  return Live(function (opts) {
     return read(db, opts)
-
-  //optionally notify when we switch from reading history to realtime
-  var sync = opts.onSync && function (abort, cb) {
-      opts.onSync(abort); cb(abort || true)
-    }
-
-  if(opts.onSync === true || opts.sync === true)
-    sync = pull.values([{sync: true}])
-
-  return cat([read(db, opts), sync, live(db, opts)])
+  }, function (opts) {
+    return live(db, opts)
+  })(opts)
 }
 
 exports.write =
@@ -78,6 +71,4 @@ exports.createWriteStream = function (db, opts, done) {
     Drain(null, done)
   )
 }
-
-
 
