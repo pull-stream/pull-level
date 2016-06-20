@@ -18,18 +18,23 @@ require('tape')('live', function (t) {
 
   var n = 3
 
-  h.random(db, 10, function (err2, all) {
+  h.random(db, 11, function (err2, all) {
     if(err2) throw err2
 
     pull(
-      l.read(db, {live: true, onSync: function () {
-          console.log('sync')
-          sync = true
-        }, onAbort: function (end) {
-          t.ok(end)
-          if(--n) return
-          end()
-        }
+      l.read(db, {live: true}),
+      pull.through(function (data) {
+        console.log("DATA", data)
+
+      }, function (end) {
+        console.log("END", end)
+        t.ok(end)
+        if(--n) return
+        end()
+      }),
+      pull.filter(function (d) {
+        if(d.sync) return !(sync = true)
+        return true
       }),
       h.exactly(20, err),
       pull.map(function (e) {
@@ -44,7 +49,7 @@ require('tape')('live', function (t) {
       })
     )
 
-    h.random(db, 10, function (err, _all) {
+    h.random(db, 9, function (err, _all) {
       all = h.sort(all.concat(_all))
       if(--n) return
       end()
@@ -62,3 +67,8 @@ require('tape')('live', function (t) {
     }
   })
 }) 
+
+
+
+
+

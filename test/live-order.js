@@ -10,6 +10,8 @@ var all = []
 var h = require('./helper')
 var tape = require('tape')
 
+function toKV (d) { return {key: d.key, value: d.value}}
+
 tape('live', function (t) {
   return t.end()
   var path    = '/tmp/pull-level-read-live'
@@ -18,15 +20,16 @@ tape('live', function (t) {
 
   var second = false
 
-  h.timestamps(db, 10, function (err, all) {
+  h.timestamps(db, 11, function (err, all) {
 
     var i = 0
     var sync = false
     pull(
-      l.read(db, {live: true, onSync: function () {
-        console.log('SYNC')
-        sync = true
-      }}),
+      l.read(db, {live: true, values: false}),
+      pull.filter(function (s) {
+        if(s.sync) sync = true
+        else return true
+      }),
       h.exactly(20),
       pull.collect(function (err, ary) {
         process.nextTick(function () {
@@ -36,9 +39,7 @@ tape('live', function (t) {
           t.equal(ary.length, 20)
           t.equal(ary.length, all.length)
           t.deepEqual(ary, h.sort(ary.slice()))
-          t.deepEqual(ary.map(function (e) {
-            return {key: e.key, value: e.value}
-          }), all)
+          t.deepEqual(ary.map(toKV), all)
           t.ok(sync)
           t.end()
         })
@@ -47,7 +48,7 @@ tape('live', function (t) {
 
 
     setTimeout(function () {
-      h.timestamps(db, 10, function (err, _all) {
+      h.timestamps(db, 9, function (err, _all) {
         second = true
         all = all.concat(_all)
         console.log('all', all, all.length)
@@ -55,7 +56,6 @@ tape('live', function (t) {
     }, 100)
   })
 })
-
 
 tape('live2', function (t) {
 
@@ -72,10 +72,11 @@ tape('live2', function (t) {
     var i = 0
     var sync = false
     pull(
-      l.read(db, {tail: true, keys: false, onSync: function () {
-        console.log('SYNC')
-        sync = true
-      }}),
+      l.read(db, {live: true}),
+      pull.filter(function (s) {
+        if(s.sync) sync = true
+        else return true
+      }),
       h.exactly(20),
       pull.collect(function (err, _ary) {
         t.notOk(err)
@@ -102,16 +103,13 @@ tape('live2', function (t) {
       t.equal(ary.length, 20)
       t.equal(ary.length, all.length)
 
-      var values = all.map(function (e) { return e.value })
-
-      t.deepEqual(ary, values)
+      t.deepEqual(ary.map(toKV), all.map(toKV))
       t.ok(sync)
       t.end()
 
     }
   })
 })
-return
 
 tape('live, sync:true', function (t) {
   var path    = '/tmp/pull-level-read-live3'
@@ -120,12 +118,12 @@ tape('live, sync:true', function (t) {
 
   var second = false, ary
 
-  h.timestamps(db, 10, function (err, all) {
+  h.timestamps(db, 11, function (err, all) {
 
     var i = 0
     var sync = false
     pull(
-      l.read(db, {tail: true, keys: false, sync: true}),
+      l.read(db, {live: true, sync: true}),
       pull.filter(function (data) {
         if(data.sync) sync = true
         else return true
@@ -140,16 +138,16 @@ tape('live, sync:true', function (t) {
 
 
     setTimeout(function () {
-      h.timestamps(db, 10, function (err, _all) {
+      h.timestamps(db, 9, function (err, _all) {
         second = true
         all = all.concat(_all)
           console.log(ary)
           t.equal(ary.length, 20)
           t.equal(ary.length, all.length)
 
-          var values = all.map(function (e) { return e.value })
+//          var values = all.map(toKV)
 
-          t.deepEqual(ary, values)
+          t.deepEqual(ary.map(toKV), all)
           t.ok(sync)
           t.end()
       })
@@ -157,3 +155,11 @@ tape('live, sync:true', function (t) {
   })
 
 })
+
+
+
+
+
+
+
+
