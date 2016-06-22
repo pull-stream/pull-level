@@ -14,7 +14,7 @@
     "pull-pushable": "^2.0.0",
     "pull-stream": "^3.4.0",
     "pull-window": "^2.1.4",
-    "stream-to-pull-stream": "^1.6.6"
+    "stream-to-pull-stream": "^1.6.10"
   },
   "devDependencies": {
     "level": "^1.4.0",
