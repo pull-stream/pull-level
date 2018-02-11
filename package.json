@@ -8,7 +8,7 @@
     "url": "git://github.com/dominictarr/pull-level.git"
   },
   "dependencies": {
-    "level-post": "~1.0.3",
+    "level-post": "^1.0.7",
     "pull-cat": "^1.1.9",
     "pull-live": "^1.0.1",
     "pull-pushable": "^2.0.0",
